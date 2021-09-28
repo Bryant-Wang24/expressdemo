@@ -1,9 +1,41 @@
 const express = require('express')
 const app = express()
 
+
+app.set("view engine", "ejs")
+
+// 配置静态web目录
+app.use(express.static("static"))
+
+
 app.get('/', function (req, res) {
-    res.send('你好，express')
+    let title = "你好ejs"
+    res.render("index", {
+        title: title
+    })
+    // res.send('你好，express')
 })
+app.get('/news', function (req, res) {
+    let title = {
+        username: '王秋爽',
+        age: 23
+    }
+    let h = "<h3>我是h3标题</h3>"
+    let list = ['3333333', '44444444', '555555']
+    res.render("news", {
+        title: title,
+        h: h,
+        tags: true,
+        score: 60,
+        list: list
+    })
+    // res.send('你好，express')
+})
+
+
+
+
+
 app.get('/article', function (req, res) {
     res.send('新闻页面')
 })
@@ -32,7 +64,7 @@ app.get('/editUser/admin', function (req, res) {
 })
 // 动态路由
 app.get('/edit/:id', function (req, res) {
-    var id = req.params['id']
+    const id = req.params['id'];
     res.send('动态路由' + id)
 })
 
