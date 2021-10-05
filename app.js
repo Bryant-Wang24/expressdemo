@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const ejs = require('ejs')
 
+var cookieParser = require('cookie-parser')
+app.use(cookieParser())//配置cookieParser中间件
+
 
 
 app.set("view engine", "ejs")
@@ -15,14 +18,23 @@ app.use(express.json())// json请求
 
 
 app.get('/', function (req, res) {
+    // 设置cookie 如果cookie没有过期的话，关闭浏览器重新打开，cookie不会销毁
+    // res.cookie("username", "zhangsan", { maxAge: 1000 * 60 * 60, path: "/login" })//path表示哪些路由可以访问cookie
+
     // let title = "你好ejs"
     // res.render("index", {
     //     title: title
     // })
+
+    // 多个域名共享cookie 比如aaa.lining.com和bbb.lining.com要共享cookie,需要设置domain
+    res.cookie("username", "zhangsan", { maxAge: 1000 * 60 * 60, domain: "lining.com" })
     res.send('首页')
 })
 app.get('/login', function (req, res) {
-    res.render("login", {})
+    let username = req.cookies.username
+    console.log('username', username);
+    res.send("登陆页面" + username)
+    // res.render("login", {})
     // let title = {
     //     username: '王秋爽',
     //     age: 23
@@ -80,9 +92,9 @@ app.post("/doLogin", (req, res) => {
 
 
 
-app.get('/', function (req, res) {
-    res.send('首页')
-})
+// app.get('/', function (req, res) {
+//     res.send('首页')
+// })
 // app.get('/article', function (req, res) {
 //     res.send('新闻页面')
 // })
