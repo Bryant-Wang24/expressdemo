@@ -3,7 +3,7 @@ const app = express()
 const ejs = require('ejs')
 
 var cookieParser = require('cookie-parser')
-app.use(cookieParser())//配置cookieParser中间件
+app.use(cookieParser("wqs"))//配置cookieParser中间件
 
 
 
@@ -27,8 +27,24 @@ app.get('/', function (req, res) {
     // })
 
     // 多个域名共享cookie 比如aaa.lining.com和bbb.lining.com要共享cookie,需要设置domain
-    res.cookie("username", "zhangsan", { maxAge: 1000 * 60 * 60, domain: "lining.com" })
+    // res.cookie("username", "zhangsan", { maxAge: 1000 * 60 * 60, domain: "lining.com" })
+
+
+    // cookie的加密，设置signed
+    // 1、配置中间件的时候需要传入加密的参数
+    // app.use(cookieParser("itying"))//这里的itying就是要加密的参数
+    // 2、res.cookie("username", "zhangsan", { maxAge: 1000 * 60 * 60, signed: true })
+    // 3、res.signedCookies
+
+    res.cookie("username", "zhangsan", { maxAge: 1000 * 60 * 60, signed: true })
     res.send('首页')
+})
+
+
+app.get('/art', function (req, res) {
+    let username = req.signedCookies.username
+    console.log('username', username);
+    res.send("登陆页面" + username)
 })
 app.get('/login', function (req, res) {
     let username = req.cookies.username
