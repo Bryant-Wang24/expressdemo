@@ -1,5 +1,6 @@
 const express = require('express')
 var session = require('express-session')
+const MongoStore = require('connect-mongo')
 const app = express()
 
 // 配置session的中间件
@@ -12,7 +13,11 @@ app.use(session({
         maxAge: 1000 * 60,
         secure: false//true白哦是只有https协议才能访问cookie
     },
-    rolling: true//在每次请求时强行设置cookie，重置cookie过期时间，默认false
+    rolling: true,//在每次请求时强行设置cookie，重置cookie过期时间，默认false
+    store: MongoStore.create({
+        mongoUrl: 'mongodb://127.0.0.1:27017/shop',
+        touchAfter: 24 * 3600 // 意思是不管发出了多少次请求 在24小时内只更新一次session 除非你改变了这个session
+    })
 }))
 
 app.get('/', (req, res) => {
