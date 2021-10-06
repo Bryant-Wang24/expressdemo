@@ -11,10 +11,15 @@ app.use(express.urlencoded({ extended: false }))// 表单请求
 app.use(express.json())// json请求
 
 // 引入外部模块
-const login = require('./routes/login')
+const admin = require('./routes/admin')
+const index = require('./routes/index')
+const api = require('./routes/api')
 
-// 挂载login模块
-app.use("/login", login)
+// 挂载模块
+app.use("/admin", admin)
+app.use("/api", api)
+app.use("/", index)
+
 app.get('/', (req, res) => {
     res.send('首页')
 })
